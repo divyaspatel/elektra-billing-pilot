@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elektra Health — Billing & Claims Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ef;
+    --surface: #ffffff;
+    --surface2: #f0ece4;
+    --border: #e2dbd0;
+    --text: #1a1612;
+    --text-muted: #7a6f63;
+    --accent: #c17b3f;
+    --accent-light: #f5e8d8;
+    --green: #3a7d5e;
+    --green-light: #d6efe6;
+    --red: #b84040;
+    --red-light: #f5dada;
+    --yellow: #b07a20;
+    --yellow-light: #f5edd8;
+    --blue: #3a5a8a;
+    --blue-light: #d8e4f5;
+    --purple: #6b4a8a;
+    --purple-light: #ead8f5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  header {
+    background: var(--text);
+    color: white;
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+  }
+
+  .logo span { color: var(--accent); }
+
+  .header-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: #888;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .main { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+
+  /* Summary cards */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .summary-card .label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .summary-card .value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--text);
+  }
+
+  .summary-card .sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .summary-card.highlight { background: var(--text); color: white; }
+  .summary-card.highlight .label { color: #999; }
+  .summary-card.highlight .value { color: white; }
+  .summary-card.highlight .sub { color: #999; }
+
+  /* Filters */
+  .filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-right: 4px;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text);
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--text); color: white; border-color: var(--text); }
+
+  /* Table */
+  .table-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead tr {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--accent-light); }
+  tbody tr.selected { background: var(--accent-light); }
+
+  td {
+    padding: 13px 16px;
+    vertical-align: middle;
+  }
+
+  .patient-name {
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .patient-age {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  .code-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin: 2px 2px 2px 0;
+    white-space: nowrap;
+  }
+
+  .amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .amount.billed { color: var(--text); }
+  .amount.paid { color: var(--green); }
+  .amount.denied { color: var(--red); }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .status-badge.approved { background: var(--green-light); color: var(--green); }
+  .status-badge.denied { background: var(--red-light); color: var(--red); }
+  .status-badge.pending { background: var(--yellow-light); color: var(--yellow); }
+  .status-badge.appealed { background: var(--purple-light); color: var(--purple); }
+  .status-badge.partial { background: var(--blue-light); color: var(--blue); }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .days {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+
+  .days.fast { color: var(--green); }
+  .days.medium { color: var(--yellow); }
+  .days.slow { color: var(--red); }
+  .days.pending { color: var(--text-muted); font-style: italic; }
+
+  /* Detail panel */
+  .detail-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .detail-panel.visible { display: block; }
+
+  .detail-header {
+    background: var(--text);
+    color: white;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .detail-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+  }
+
+  .detail-title span { color: var(--accent); font-style: italic; }
+
+  .close-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .detail-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+  .detail-section { }
+
+  .detail-section h4 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 16px;
+  }
+
+  .detail-row .key {
+    font-size: 12px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .detail-row .val {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .timeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 8px;
+    overflow-x: auto;
+  }
+
+  .timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  .timeline-dot.inactive { background: var(--border); }
+
+  .timeline-line {
+    height: 2px;
+    flex: 1;
+    background: var(--border);
+    min-width: 20px;
+    margin-bottom: 16px;
+  }
+
+  .timeline-line.done { background: var(--accent); }
+
+  .timeline-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .timeline-date {
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    color: var(--accent);
+    margin-top: 2px;
+  }
+
+  .appeal-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  .appeal-box strong { font-style: normal; display: block; margin-bottom: 6px; color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .note-text {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 8px;
+  }
+
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  @media (max-width: 900px) {
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .detail-body { grid-template-columns: 1fr; }
+    .main { padding: 16px; }
+    header { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Elektra <span>Health</span></div>
+    <div style="font-size:11px;color:#666;margin-top:3px;">Billing & Claims — Sample Dataset</div>
+  </div>
+  <div class="header-meta">
+    Sample Period: Jan–Feb 2025<br>
+    10 Patients · Pilot Dataset
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Summary -->
+  <div class="summary-grid">
+    <div class="summary-card highlight">
+      <div class="label">Total Billed</div>
+      <div class="value">$12,840</div>
+      <div class="sub">10 claims · 10 patients</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Total Collected</div>
+      <div class="value" style="color:var(--green)">$8,106</div>
+      <div class="sub">63.1% collection rate</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Denial Rate</div>
+      <div class="value" style="color:var(--red)">30%</div>
+      <div class="sub">3 of 10 claims denied</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Avg Days to Payment</div>
+      <div class="value">34d</div>
+      <div class="sub">Approved claims only</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Est. Staff Time</div>
+      <div class="value" style="color:var(--accent)">~18hrs</div>
+      <div class="sub">For these 10 claims</div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="filterTable('all', this)">All Claims</button>
+    <button class="filter-btn" onclick="filterTable('approved', this)">✓ Approved</button>
+    <button class="filter-btn" onclick="filterTable('denied', this)">✗ Denied</button>
+    <button class="filter-btn" onclick="filterTable('partial', this)">◑ Partial Pay</button>
+    <button class="filter-btn" onclick="filterTable('appealed', this)">↩ Appealed</button>
+    <button class="filter-btn" onclick="filterTable('pending', this)">⏳ Pending</button>
+  </div>
+
+  <p class="hint">Click any row to see full claim details, clinical notes, and appeal drafts.</p>
+
+  <!-- Table -->
+  <div class="table-wrapper" style="margin-bottom:24px;">
+    <table id="claimsTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Patient</th>
+          <th>Visit Date</th>
+          <th>Payer</th>
+          <th>Diagnosis Codes</th>
+          <th>Procedure Codes</th>
+          <th>Billed</th>
+          <th>Paid</th>
+          <th>Status</th>
+          <th>Days to Pay</th>
+          <th>Est. Staff Time</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Detail Panel -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <div class="detail-title">Claim Detail — <span id="detailName"></span></div>
+      <button class="close-btn" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+  </div>
+
+</div>
+
+<script>
+const patients = [
+  {
+    id: "ELK-001",
+    name: "Margaret T.",
+    age: 52,
+    visitDate: "Jan 6, 2025",
+    payer: "Aetna",
+    plan: "PPO Gold",
+    dx: ["N95.1 – Menopausal/female climacteric state", "G47.00 – Insomnia, unspecified"],
+    cpt: ["99214 – Office visit, moderate complexity", "96127 – Brief behavioral assessment"],
+    billed: 485,
+    paid: 312,
+    status: "approved",
+    daysToPayment: 22,
+    staffTime: "45 min",
+    timeline: ["Jan 6", "Jan 7", "Jan 9", "Jan 31"],
+    timelineLabels: ["Visit", "Coded & Submitted", "Eligibility Confirmed", "Payment Received"],
+    clinicalNote: "Patient presents for follow-up on menopausal symptom management. Reports significant sleep disruption (avg 4–5 hrs/night), hot flashes 6–8x daily, and mood instability. Currently on low-dose estradiol patch. Assessment: climacteric state with comorbid insomnia. Plan: adjust HRT dosage, add sleep hygiene counseling, refer to behavioral health.",
+    denialReason: null,
+    appeal: null,
+    note: "Clean claim. Submitted next business day, paid in 22 days. No issues."
+  },
+  {
+    id: "ELK-002",
+    name: "Sandra R.",
+    age: 48,
+    visitDate: "Jan 9, 2025",
+    payer: "UnitedHealthcare",
+    plan: "HMO Select",
+    dx: ["N95.0 – Postmenopausal bleeding", "Z12.31 – Encounter for screening mammogram"],
+    cpt: ["99213 – Office visit, low-moderate complexity", "77067 – Screening mammogram, bilateral"],
+    billed: 620,
+    paid: 0,
+    status: "denied",
+    daysToPayment: null,
+    staffTime: "2.5 hrs",
+    timeline: ["Jan 9", "Jan 10", "Jan 17", "Jan 24", "—"],
+    timelineLabels: ["Visit", "Submitted", "Denial Received", "Appeal Filed", "Awaiting Decision"],
+    clinicalNote: "Patient presents with episode of postmenopausal bleeding, last period 14 months ago. Orders pelvic ultrasound and bilateral mammogram. Mammogram performed same day. Pathology pending. Patient counseled on importance of follow-up.",
+    denialReason: "CO-4: Procedure inconsistent with modifier / CO-97: Benefit included in primary procedure. UHC denied mammogram claim stating it was bundled with the office visit under the HMO plan's preventive benefit cap for the calendar year — patient had a mammogram in April 2024.",
+    appeal: "Re: Claim #UHC-2025-00847 — Appeal for Denied Mammogram (CPT 77067)\n\nDear UnitedHealthcare Appeals Department,\n\nWe are writing to appeal the denial of CPT 77067 (bilateral screening mammogram) for patient Sandra R., date of service January 9, 2025.\n\nThe denial cites CO-97 (bundling with primary procedure). However, this mammogram was not a routine screening visit — it was ordered as a diagnostic work-up in response to a new clinical finding: postmenopausal bleeding (ICD-10 N95.0). This constitutes a diagnostic mammogram in clinical context, and should not be subject to the annual preventive mammogram benefit limit.\n\nWe request reconsideration under diagnostic imaging benefits and attach the treating physician's clinical notes documenting the indication for this study.\n\nSincerely, Elektra Health Billing Department",
+    note: "This is a common UHC denial pattern — preventive services bundling. Appeal success rate ~60%. Estimated 2.5 hours total staff time including denial review, appeal drafting, and tracking."
+  },
+  {
+    id: "ELK-003",
+    name: "Diane W.",
+    age: 55,
+    visitDate: "Jan 13, 2025",
+    payer: "Cigna",
+    plan: "PPO Standard",
+    dx: ["M81.0 – Age-related osteoporosis without pathological fracture", "N95.1 – Menopausal/female climacteric state"],
+    cpt: ["99215 – Office visit, high complexity", "77080 – DXA bone density scan"],
+    billed: 780,
+    paid: 780,
+    status: "approved",
+    daysToPayment: 28,
+    staffTime: "40 min",
+    timeline: ["Jan 13", "Jan 14", "Jan 41"],
+    timelineLabels: ["Visit", "Submitted", "Payment Received"],
+    clinicalNote: "Patient referred for menopause management and bone health evaluation. Reports 3 years post-menopause, significant family history of osteoporosis (mother had hip fracture at 68). Bone density scan ordered. DXA results: T-score -2.3 lumbar spine, -1.9 femoral neck. Diagnosis: osteoporosis. Plan: initiate bisphosphonate therapy, calcium/Vit D supplementation, follow-up in 6 months.",
+    denialReason: null,
+    appeal: null,
+    note: "Clean claim, full payment. DXA was pre-authorized. Cigna PPO covers bone density at 100% for post-menopausal women over 50."
+  },
+  {
+    id: "ELK-004",
+    name: "Patricia K.",
+    age: 51,
+    visitDate: "Jan 16, 2025",
+    payer: "Blue Cross Blue Shield",
+    plan: "PPO Plus",
+    dx: ["F32.1 – Major depressive disorder, moderate", "N95.1 – Menopausal/female climacteric state", "G47.00 – Insomnia, unspecified"],
+    cpt: ["99214 – Office visit, moderate complexity", "90837 – Psychotherapy, 60 min"],
+    billed: 560,
+    paid: 420,
+    status: "partial",
+    daysToPayment: 35,
+    staffTime: "1.2 hrs",
+    timeline: ["Jan 16", "Jan 17", "Jan 24", "Feb 20"],
+    timelineLabels: ["Visit", "Submitted", "Partial EOB Received", "Balance Billed to Patient"],
+    clinicalNote: "Patient presents with worsening mood, anhedonia, and sleep disruption over 6 months concurrent with perimenopause. PHQ-9 score: 14 (moderate depression). 60-minute integrated care session combining menopause symptom review and psychotherapy. Initiated SSRI trial and adjusted HRT.",
+    denialReason: "CO-97: Psychotherapy (90837) partially denied — BCBS applied patient's mental health deductible ($500, not yet met). Office visit (99214) paid at 80% after deductible. $140 patient responsibility applied.",
+    appeal: null,
+    note: "Partial payment due to unmet deductible — not a true denial. Staff time spent on EOB reconciliation and patient balance billing. Common scenario: patient wasn't aware of separate mental health deductible."
+  },
+  {
+    id: "ELK-005",
+    name: "Joyce M.",
+    age: 58,
+    visitDate: "Jan 21, 2025",
+    payer: "Humana",
+    plan: "Medicare Advantage",
+    dx: ["E28.319 – Premature ovarian failure, unspecified", "N95.1 – Menopausal/female climacteric state"],
+    cpt: ["99213 – Office visit, low-moderate complexity", "S0189 – Testosterone pellet implant"],
+    billed: 890,
+    paid: 0,
+    status: "denied",
+    daysToPayment: null,
+    staffTime: "3+ hrs",
+    timeline: ["Jan 21", "Jan 22", "Jan 30", "Feb 10", "—"],
+    timelineLabels: ["Visit", "Submitted", "Denial Received", "Appeal Filed", "Pending"],
+    clinicalNote: "Post-menopausal patient with premature ovarian failure and documented testosterone deficiency (total testosterone 8 ng/dL, ref range 15–70). Significant symptoms: low libido, fatigue, cognitive fog. Testosterone pellet implant administered (100mg). Patient reports prior failed trials of topical testosterone.",
+    denialReason: "CO-49: Non-covered service. Humana Medicare Advantage plan does not cover testosterone pellet therapy (S0189) — classified as investigational/experimental for female patients. Additionally, denial letter states that HRT for menopausal symptoms is excluded under this specific plan rider.",
+    appeal: "Re: Claim #HUM-MA-2025-04421 — Appeal for Testosterone Pellet Therapy (S0189)\n\nDear Humana Medicare Advantage Appeals,\n\nWe write to appeal the denial of testosterone pellet therapy for Joyce M., DOB [redacted], DOS January 21, 2025.\n\nThe denial categorizes S0189 as 'investigational.' We respectfully disagree. Testosterone therapy for women with documented deficiency due to premature ovarian failure (E28.319) is supported by substantial clinical evidence including Endocrine Society Clinical Practice Guidelines (2014, updated 2019) and multiple peer-reviewed RCTs demonstrating efficacy for hypoactive sexual desire disorder and fatigue.\n\nThis patient has documented testosterone deficiency (total T: 8 ng/dL) and failed prior topical trials. The treatment is medically necessary, not elective. We attach: (1) lab results, (2) prior treatment history, (3) physician attestation of medical necessity, (4) supporting clinical literature.\n\nWe request urgent peer-to-peer review with the treating physician.\n\nSincerely, Elektra Health — Medical Director's Office",
+    note: "This is Elektra's hardest denial type — Medicare Advantage plans frequently exclude testosterone therapy for women. This is a known pain point in women's health. Appeal is uphill but possible with peer-to-peer. Estimated 3+ hours staff time. High likelihood of writing off or patient self-pay."
+  },
+  {
+    id: "ELK-006",
+    name: "Catherine B.",
+    age: 46,
+    visitDate: "Jan 27, 2025",
+    payer: "Aetna",
+    plan: "PPO Gold",
+    dx: ["N92.0 – Excessive and frequent menstruation with regular cycle", "N95.1 – Menopausal/female climacteric state"],
+    cpt: ["99214 – Office visit, moderate complexity", "96160 – Patient-focused health risk assessment"],
+    billed: 395,
+    paid: 316,
+    status: "approved",
+    daysToPayment: 19,
+    staffTime: "35 min",
+    timeline: ["Jan 27", "Jan 28", "Feb 15"],
+    timelineLabels: ["Visit", "Submitted", "Payment Received"],
+    clinicalNote: "Perimenopausal patient with irregular heavy periods, fatigue, and mood swings. Reports cycles ranging 21–45 days, flooding for first 3 days. Health risk assessment administered (Menopause Rating Scale). FSH elevated at 42 IU/L confirming perimenopause. Plan: progesterone IUD discussed, low-dose OCP trial initiated.",
+    denialReason: null,
+    appeal: null,
+    note: "Fast clean claim. Aetna PPO paid well. 80% of billed amount per contracted rate."
+  },
+  {
+    id: "ELK-007",
+    name: "Ruth H.",
+    age: 63,
+    visitDate: "Jan 30, 2025",
+    payer: "UnitedHealthcare",
+    plan: "Medicare Supplement (Medigap)",
+    dx: ["N95.2 – Postmenopausal atrophic vaginitis", "N39.0 – Urinary tract infection, site not specified"],
+    cpt: ["99214 – Office visit, moderate complexity", "57150 – Irrigation of vagina"],
+    billed: 340,
+    paid: 340,
+    status: "approved",
+    daysToPayment: 31,
+    staffTime: "30 min",
+    timeline: ["Jan 30", "Jan 31", "Mar 2"],
+    timelineLabels: ["Visit", "Submitted", "Payment Received"],
+    clinicalNote: "Patient presents with genitourinary syndrome of menopause — vaginal dryness, dyspareunia, and recurrent UTIs (3rd episode this year). Vaginal pH 6.2. Local estrogen cream initiated. Vaginal irrigation performed in office. Urine culture sent. Counseled on hygiene and probiotic use.",
+    denialReason: null,
+    appeal: null,
+    note: "Medicare + Medigap = full reimbursement with no patient balance. Clean claim, straightforward coding."
+  },
+  {
+    id: "ELK-008",
+    name: "Linda F.",
+    age: 50,
+    visitDate: "Feb 3, 2025",
+    payer: "Cigna",
+    plan: "HDHP",
+    dx: ["N95.1 – Menopausal/female climacteric state", "R51 – Headache"],
+    cpt: ["99213 – Office visit, low-moderate complexity", "96127 – Brief behavioral assessment"],
+    billed: 310,
+    paid: 0,
+    status: "pending",
+    daysToPayment: null,
+    staffTime: "20 min (so far)",
+    timeline: ["Feb 3", "Feb 4", "—", "—"],
+    timelineLabels: ["Visit", "Submitted", "Awaiting EOB", "—"],
+    clinicalNote: "New patient presenting with menopausal symptoms including migraines correlating with hormonal fluctuations, sleep difficulty, and vasomotor symptoms. Menopause rating scale completed. Labs ordered: FSH, estradiol, TSH. No HRT started pending lab results. Follow-up scheduled in 3 weeks.",
+    denialReason: null,
+    appeal: null,
+    note: "Claim submitted Feb 4. HDHP plans typically take 30–45 days for adjudication. Patient has $3,000 deductible — this will likely be patient responsibility. Staff will need to follow up after 30 days if no EOB received."
+  },
+  {
+    id: "ELK-009",
+    name: "Helen A.",
+    age: 54,
+    visitDate: "Feb 7, 2025",
+    payer: "Blue Cross Blue Shield",
+    plan: "PPO Plus",
+    dx: ["N95.1 – Menopausal/female climacteric state", "E78.5 – Hyperlipidemia, unspecified"],
+    cpt: ["99214 – Office visit, moderate complexity", "80061 – Lipid panel"],
+    billed: 460,
+    paid: 460,
+    status: "appealed",
+    daysToPayment: 47,
+    staffTime: "2 hrs",
+    timeline: ["Feb 7", "Feb 8", "Feb 18", "Feb 25", "Mar 25"],
+    timelineLabels: ["Visit", "Submitted", "Denied", "Appeal Filed", "Paid on Appeal"],
+    clinicalNote: "Patient with known menopause and new complaint of fatigue and palpitations. Labs ordered including lipid panel given elevated cardiovascular risk in post-menopausal women. Lipid panel: total cholesterol 238, LDL 162, HDL 44, triglycerides 195. New diagnosis hyperlipidemia. Statin therapy initiated.",
+    denialReason: "CO-50: These are non-covered services because this is not deemed a 'medical necessity' by the payer. BCBS denied the lipid panel stating it was not medically indicated at this visit — they argued lipid panels are covered annually as preventive and the patient had one in November 2024 (just 3 months prior).",
+    appeal: "Re: Claim #BCBS-2025-11293 — Appeal for Lipid Panel (CPT 80061)\n\nDear BCBS Appeals Department,\n\nWe appeal the denial of CPT 80061 (lipid panel) for Helen A., DOS February 7, 2025, on grounds of medical necessity.\n\nWhile the patient did have a preventive lipid panel in November 2024, the February 7 test was ordered for a new clinical indication: new-onset palpitations and fatigue in a post-menopausal patient with no prior lipid disorder diagnosis. This was a diagnostic test, not a repeat preventive screen.\n\nThe results confirmed a new diagnosis of hyperlipidemia (E78.5), demonstrating clear medical necessity. We request this be reclassified as a diagnostic rather than preventive service.\n\nAttached: physician clinical notes, prior lab results for comparison, and diagnosis documentation.\n\nSincerely, Elektra Health Billing",
+    note: "Appeal was successful — paid in full 47 days post-visit. This is a common pattern: labs ordered for diagnostic purposes get incorrectly categorized as preventive duplicates. Appeal success rate high when clinical notes are clear."
+  },
+  {
+    id: "ELK-010",
+    name: "Barbara E.",
+    age: 49,
+    visitDate: "Feb 12, 2025",
+    payer: "Humana",
+    plan: "PPO Select",
+    dx: ["N95.1 – Menopausal/female climacteric state", "F41.1 – Generalized anxiety disorder"],
+    cpt: ["99215 – Office visit, high complexity", "90833 – Psychotherapy add-on, 30 min"],
+    billed: 600,
+    paid: 478,
+    status: "partial",
+    daysToPayment: 38,
+    staffTime: "1 hr",
+    timeline: ["Feb 12", "Feb 13", "Feb 21", "Mar 21"],
+    timelineLabels: ["Visit", "Submitted", "EOB Received", "Patient Balance Billed"],
+    clinicalNote: "Complex perimenopausal patient with concurrent generalized anxiety disorder. 30-minute psychotherapy add-on administered during high-complexity visit. Significant symptom overlap between hormonal anxiety and GAD. Adjusted anxiolytic dose, initiated HRT. Coordinating with patient's psychiatrist.",
+    denialReason: "CO-4: Modifier inconsistency. Humana partially denied the psychotherapy add-on (90833) — paid at lower rate pending modifier 25 review. $122 applied to patient's coinsurance.",
+    appeal: null,
+    note: "Partial payment — $122 patient coinsurance applied. Modifier 25 on 99215 was correct, this may be a payer processing error worth a formal resubmission. Low dollar amount often makes formal appeal not worth the staff time."
+  }
+];
+
+const statusConfig = {
+  approved: { label: 'Approved', class: 'approved' },
+  denied: { label: 'Denied', class: 'denied' },
+  pending: { label: 'Pending', class: 'pending' },
+  appealed: { label: 'Appealed → Paid', class: 'appealed' },
+  partial: { label: 'Partial Pay', class: 'partial' }
+};
+
+function daysClass(days, status) {
+  if (!days) return 'pending';
+  if (days <= 25) return 'fast';
+  if (days <= 40) return 'medium';
+  return 'slow';
+}
+
+function renderTable(filter = 'all') {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  const filtered = filter === 'all' ? patients : patients.filter(p => p.status === filter);
+  filtered.forEach(p => {
+    const sc = statusConfig[p.status];
+    const row = document.createElement('tr');
+    row.setAttribute('data-id', p.id);
+    row.innerHTML = `
+      <td><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">${p.id}</span></td>
+      <td>
+        <div class="patient-name">${p.name}</div>
+        <div class="patient-age">Age ${p.age}</div>
+      </td>
+      <td style="font-size:12px;white-space:nowrap">${p.visitDate}</td>
+      <td>
+        <div style="font-size:12px;font-weight:500">${p.payer}</div>
+        <div style="font-size:10px;color:var(--text-muted)">${p.plan}</div>
+      </td>
+      <td>${p.dx.map(d => `<span class="code-badge">${d.split('–')[0].trim()}</span>`).join('')}</td>
+      <td>${p.cpt.map(c => `<span class="code-badge">${c.split('–')[0].trim()}</span>`).join('')}</td>
+      <td><span class="amount billed">$${p.billed.toLocaleString()}</span></td>
+      <td><span class="amount ${p.paid > 0 ? 'paid' : 'denied'}">${p.paid > 0 ? '$'+p.paid.toLocaleString() : '—'}</span></td>
+      <td><span class="status-badge ${sc.class}"><span class="dot"></span>${sc.label}</span></td>
+      <td><span class="days ${daysClass(p.daysToPayment, p.status)}">${p.daysToPayment ? p.daysToPayment + 'd' : '—'}</span></td>
+      <td style="font-size:12px;color:var(--text-muted)">${p.staffTime}</td>
+    `;
+    row.addEventListener('click', () => showDetail(p));
+    tbody.appendChild(row);
+  });
+}
+
+function filterTable(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable(filter);
+  closeDetail();
+}
+
+function showDetail(p) {
+  document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('selected'));
+  const row = document.querySelector(`[data-id="${p.id}"]`);
+  if (row) row.classList.add('selected');
+
+  document.getElementById('detailName').textContent = `${p.name} · ${p.id}`;
+  const sc = statusConfig[p.status];
+
+  // Build timeline HTML
+  let timelineHTML = '<div class="timeline">';
+  p.timeline.forEach((date, i) => {
+    const done = date !== '—';
+    if (i > 0) timelineHTML += `<div class="timeline-line ${done ? 'done' : ''}"></div>`;
+    timelineHTML += `<div class="timeline-step">
+      <div class="timeline-dot ${done ? '' : 'inactive'}"></div>
+      <div class="timeline-label">${p.timelineLabels[i]}<div class="timeline-date">${date}</div></div>
+    </div>`;
+  });
+  timelineHTML += '</div>';
+
+  let html = `
+    <div class="detail-section">
+      <h4>Claim Summary</h4>
+      <div class="detail-row"><span class="key">Patient</span><span class="val">${p.name}, Age ${p.age}</span></div>
+      <div class="detail-row"><span class="key">Visit Date</span><span class="val">${p.visitDate}</span></div>
+      <div class="detail-row"><span class="key">Payer / Plan</span><span class="val">${p.payer} — ${p.plan}</span></div>
+      <div class="detail-row"><span class="key">Status</span><span class="val"><span class="status-badge ${sc.class}" style="float:right"><span class="dot"></span>${sc.label}</span></span></div>
+      <div class="detail-row"><span class="key">Amount Billed</span><span class="val" style="color:var(--text)">$${p.billed.toLocaleString()}</span></div>
+      <div class="detail-row"><span class="key">Amount Paid</span><span class="val" style="color:${p.paid > 0 ? 'var(--green)' : 'var(--red)'}">$${p.paid > 0 ? p.paid.toLocaleString() : '0'}</span></div>
+      ${p.paid < p.billed && p.paid > 0 ? `<div class="detail-row"><span class="key">Patient Balance</span><span class="val" style="color:var(--yellow)">$${(p.billed - p.paid).toLocaleString()}</span></div>` : ''}
+      <div class="detail-row"><span class="key">Est. Staff Time</span><span class="val" style="color:var(--accent)">${p.staffTime}</span></div>
+      <br>
+      <h4>Diagnosis Codes</h4>
+      ${p.dx.map(d => `<div style="font-size:12px;margin-bottom:6px;"><span class="code-badge">${d.split('–')[0].trim()}</span> ${d.split('–')[1]?.trim() || ''}</div>`).join('')}
+      <br>
+      <h4>Procedure Codes</h4>
+      ${p.cpt.map(c => `<div style="font-size:12px;margin-bottom:6px;"><span class="code-badge">${c.split('–')[0].trim()}</span> ${c.split('–')[1]?.trim() || ''}</div>`).join('')}
+    </div>
+
+    <div class="detail-section">
+      <h4>Claim Timeline</h4>
+      ${timelineHTML}
+      <br>
+      <h4>Clinical Note (Summary)</h4>
+      <div class="note-text">${p.clinicalNote}</div>
+
+      ${p.denialReason ? `
+      <br>
+      <h4>Denial Reason</h4>
+      <div class="note-text" style="border-left:3px solid var(--red);color:var(--red)">${p.denialReason}</div>
+      ` : ''}
+
+      ${p.appeal ? `
+      <br>
+      <h4>AI-Drafted Appeal Letter</h4>
+      <div class="appeal-box"><strong>🤖 AI Draft — Human review required before sending</strong>${p.appeal}</div>
+      ` : ''}
+
+      ${p.note ? `
+      <br>
+      <h4>Billing Notes</h4>
+      <div class="note-text" style="font-style:normal">${p.note}</div>
+      ` : ''}
+    </div>
+  `;
+
+  document.getElementById('detailBody').innerHTML = html;
+  const panel = document.getElementById('detailPanel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('visible');
+  document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('selected'));
+}
+
+renderTable();
+</script>
+</body>
+</html>
