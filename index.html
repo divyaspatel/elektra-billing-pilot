@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elektra Health — AI Billing & Claims Pilot Pitch</title>
+<title>Elektra Health — AI Billing Discovery</title>
 <script>
   (function() {
     const PASS = "elektra2026";
@@ -12,36 +12,25 @@
       document.addEventListener("DOMContentLoaded", function() {
         document.body.innerHTML = "";
         document.body.style.cssText = "margin:0;padding:0;background:linear-gradient(135deg,#1b1464,#3d1f9e);display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'Inter',sans-serif;";
-
         const box = document.createElement("div");
         box.style.cssText = "background:#fff;border-radius:16px;padding:48px 44px;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(27,20,100,0.35);";
         box.innerHTML = `
           <div style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:#5b2eaf;border-radius:50%;color:white;font-weight:700;font-size:18px;margin-bottom:12px;">E</div>
-          <div style="font-family:'Inter',sans-serif;font-size:18px;font-weight:700;color:#1b1464;margin-bottom:4px;">Elektra Health</div>
-          <div style="font-size:11px;color:#6b6fa8;margin-bottom:28px;text-transform:uppercase;letter-spacing:0.09em;font-weight:600;">AI Billing Pilot · Confidential</div>
+          <div style="font-size:18px;font-weight:700;color:#1b1464;margin-bottom:4px;">Elektra Health</div>
+          <div style="font-size:11px;color:#6b6fa8;margin-bottom:28px;text-transform:uppercase;letter-spacing:0.09em;font-weight:600;">AI Billing Discovery · Confidential</div>
           <div style="font-size:13px;color:#6b6fa8;margin-bottom:16px;">Enter password to continue</div>
           <input id="pw" type="password" placeholder="Password" style="width:100%;padding:11px 14px;border:1.5px solid #d8daf0;border-radius:50px;font-size:14px;font-family:'Inter',sans-serif;outline:none;box-sizing:border-box;margin-bottom:10px;color:#1b1464;" />
           <div id="err" style="color:#b84040;font-size:12px;height:16px;margin-bottom:8px;"></div>
-          <button id="btn" style="width:100%;background:#6b3fd4;color:white;border:none;padding:12px;border-radius:50px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;">View Pitch →</button>
+          <button id="btn" style="width:100%;background:#6b3fd4;color:white;border:none;padding:12px;border-radius:50px;font-size:14px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;">View →</button>
         `;
         document.body.appendChild(box);
-
         const input = document.getElementById("pw");
         const btn = document.getElementById("btn");
         const err = document.getElementById("err");
-
         function attempt() {
-          if (input.value === PASS) {
-            sessionStorage.setItem(KEY, "1");
-            location.reload();
-          } else {
-            err.textContent = "Incorrect password — try again.";
-            input.style.borderColor = "#b84040";
-            input.value = "";
-            input.focus();
-          }
+          if (input.value === PASS) { sessionStorage.setItem(KEY, "1"); location.reload(); }
+          else { err.textContent = "Incorrect password — try again."; input.style.borderColor = "#b84040"; input.value = ""; input.focus(); }
         }
-
         btn.addEventListener("click", attempt);
         input.addEventListener("keydown", function(e) { if (e.key === "Enter") attempt(); });
         input.focus();
@@ -49,551 +38,129 @@
     }
   })();
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #eef0f8;
-    --surface: #ffffff;
-    --surface2: #f0f2fb;
-    --border: #d8daf0;
-    --text: #1b1464;
-    --muted: #6b6fa8;
-    --accent: #5b2eaf;
-    --accent-light: #ede8f8;
-    --green: #2a7d5e;
-    --green-light: #d6efe6;
-    --red: #b84040;
-    --red-light: #f5dada;
-    --ink: #1b1464;
-    --purple-btn: #6b3fd4;
-  }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #eef0f8; color: #1b1464; font-size: 14px; line-height: 1.6; }
+  .page { max-width: 860px; margin: 0 auto; background: white; box-shadow: 0 4px 40px rgba(27,20,100,0.08); }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 13.5px;
-    line-height: 1.6;
-  }
+  /* HEADER */
+  .header { background: linear-gradient(135deg, #1b1464 0%, #3d1f9e 100%); padding: 40px 48px 36px; position: relative; overflow: hidden; }
+  .header::after { content: ''; position: absolute; bottom: -80px; right: -80px; width: 280px; height: 280px; border-radius: 50%; border: 50px solid rgba(107,63,212,0.12); }
+  .header-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .e-logo { width: 34px; height: 34px; background: #6b3fd4; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: white; flex-shrink: 0; }
+  .header-eyebrow-text { font-size: 12px; font-weight: 600; color: #a78ede; letter-spacing: 0.07em; text-transform: uppercase; }
+  .header-headline { font-family: 'Playfair Display', serif; font-size: 32px; color: white; line-height: 1.2; margin-bottom: 12px; max-width: 560px; }
+  .header-headline em { font-style: italic; color: #c8b0f0; }
+  .header-sub { font-size: 14px; color: #b0b8e0; max-width: 540px; line-height: 1.65; }
+  .header-meta { position: absolute; top: 40px; right: 48px; font-family: 'DM Mono', monospace; font-size: 10px; color: #6870a8; text-align: right; line-height: 1.9; }
 
-  /* ── PAGE LAYOUT ── */
-  .page {
-    max-width: 900px;
-    margin: 0 auto;
-    background: var(--surface);
-    box-shadow: 0 4px 40px rgba(0,0,0,0.08);
-  }
+  /* BODY */
+  .body { padding: 40px 48px; }
+  .divider { height: 1px; background: #e8eaf5; margin: 32px 0; }
+  .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #6b3fd4; margin-bottom: 6px; }
+  .section-heading { font-family: 'Playfair Display', serif; font-size: 19px; color: #1b1464; margin-bottom: 6px; }
+  .section-sub { font-size: 13px; color: #6b6fa8; margin-bottom: 20px; line-height: 1.6; }
 
-  /* ── HEADER ── */
-  .header {
-    background: linear-gradient(135deg, #1b1464 0%, #3d1f9e 100%);
-    color: white;
-    padding: 36px 48px 28px;
-    position: relative;
-    overflow: hidden;
-  }
+  /* STATS */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .stat-card { background: #f0f2fb; border-radius: 10px; padding: 16px 18px; border-left: 3px solid #6b3fd4; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 28px; color: #5b2eaf; line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 11.5px; font-weight: 600; color: #1b1464; margin-bottom: 4px; }
+  .stat-note { font-size: 11px; color: #8890c0; line-height: 1.4; }
 
-  .header::before {
-    content: '';
-    position: absolute;
-    top: -60px; right: -60px;
-    width: 240px; height: 240px;
-    border-radius: 50%;
-    border: 40px solid rgba(107,63,212,0.2);
-  }
+  /* EXPANDABLE */
+  .expand-group { margin-bottom: 8px; }
+  .expand-trigger { width: 100%; background: #f0f2fb; border: 1.5px solid #e0e2f0; border-radius: 10px; padding: 13px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-align: left; gap: 12px; transition: all 0.15s; }
+  .expand-trigger:hover { background: #e8eaf5; }
+  .expand-trigger.open { background: #1b1464; border-color: #1b1464; border-radius: 10px 10px 0 0; }
+  .expand-left { display: flex; align-items: center; gap: 10px; }
+  .expand-emoji { font-size: 15px; }
+  .expand-title { font-size: 13px; font-weight: 600; color: #1b1464; }
+  .expand-trigger.open .expand-title { color: white; }
+  .expand-hint { font-size: 11px; color: #a0a8d8; margin-left: auto; }
+  .expand-trigger.open .expand-hint { color: #7880b8; }
+  .expand-chevron { font-size: 10px; color: #a0a8d8; transition: transform 0.2s; flex-shrink: 0; }
+  .expand-trigger.open .expand-chevron { transform: rotate(180deg); color: #7880b8; }
+  .expand-body { display: none; background: #fafafa; border: 1.5px solid #e0e2f0; border-top: none; border-radius: 0 0 10px 10px; padding: 14px 20px; }
+  .expand-body.open { display: block; }
+  .q-list { list-style: none; }
+  .q-list li { font-size: 12.5px; color: #3a3a7a; padding: 7px 0; border-bottom: 1px solid #eef0f8; display: flex; gap: 8px; align-items: flex-start; line-height: 1.45; }
+  .q-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .q-list li::before { content: '→'; color: #6b3fd4; flex-shrink: 0; font-size: 11px; margin-top: 2px; font-weight: 700; }
 
-  .header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 16px;
-  }
+  /* TIMELINE */
+  .timeline-scroll { overflow-x: auto; padding-bottom: 4px; }
+  .timeline { display: flex; align-items: flex-start; min-width: 720px; padding: 8px 0 20px; }
+  .tl-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+  .tl-connector { position: absolute; top: 13px; left: 50%; right: -50%; height: 2px; background: #d8daf0; z-index: 0; }
+  .tl-dot { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; z-index: 1; position: relative; flex-shrink: 0; }
+  .tl-dot.manual { background: #f0f2fb; border: 2px solid #d8daf0; color: #8890c0; }
+  .tl-dot.ai { background: #6b3fd4; border: 2px solid #6b3fd4; color: white; }
+  .tl-dot.both { background: #1b1464; border: 2px solid #1b1464; color: white; }
+  .tl-label { font-size: 10.5px; font-weight: 600; text-align: center; margin-top: 7px; line-height: 1.3; max-width: 74px; color: #1b1464; }
+  .tl-sub { font-size: 9px; color: #8890c0; text-align: center; margin-top: 2px; max-width: 74px; line-height: 1.3; }
+  .tl-tag { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 6px; border-radius: 8px; margin-top: 5px; white-space: nowrap; }
+  .tl-tag.ai { background: #ede8f8; color: #5b2eaf; }
+  .tl-tag.manual { background: #f0f2fb; color: #8890c0; border: 1px solid #d8daf0; }
+  .tl-tag.both { background: #1b1464; color: white; }
+  .tl-legend { display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tl-legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #6b6fa8; }
+  .tl-legend-dot { width: 9px; height: 9px; border-radius: 50%; }
 
-  .logo {
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #a78ede;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
+  /* PILOT */
+  .pilot-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .pilot-step { background: #f0f2fb; border-radius: 10px; padding: 16px 18px; }
+  .step-num { font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600; color: #6b3fd4; background: white; border: 1px solid #d8daf0; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 8px; }
+  .step-title { font-size: 13px; font-weight: 700; color: #1b1464; margin-bottom: 5px; }
+  .step-body { font-size: 11.5px; color: #6b6fa8; line-height: 1.5; }
+  .step-tools { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+  .chip { font-family: 'DM Mono', monospace; font-size: 9.5px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+  .chip.dark { background: #1b1464; color: white; }
+  .chip.light { background: white; color: #6b3fd4; border: 1px solid #d8daf0; }
 
-  .headline {
-    font-family: 'Playfair Display', serif;
-    font-size: 30px;
-    line-height: 1.15;
-    color: white;
-    max-width: 520px;
-  }
-
-  .headline em { color: #a78ede; font-style: italic; }
-
-  .header-meta {
-    text-align: right;
-    font-size: 11px;
-    color: #a0a8d8;
-    font-family: 'DM Mono', monospace;
-    line-height: 1.7;
-    flex-shrink: 0;
-  }
-
-  .header-sub {
-    font-size: 13px;
-    color: #a0a8d8;
-    max-width: 560px;
-    margin-top: 10px;
-  }
-
-  /* ── BODY ── */
-  .body { padding: 0 48px 48px; }
-
-  /* ── SECTION ── */
-  .section { margin-top: 36px; }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1.5px solid var(--border);
-  }
-
-  .section-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    background: var(--accent-light);
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-    flex-shrink: 0;
-  }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 17px;
-    color: var(--text);
-  }
-
-  /* ── DISCOVERY QUESTIONS ── */
-  .q-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .q-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px 16px;
-  }
-
-  .q-card .q-category {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  .q-card ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  .q-card ul li {
-    font-size: 12px;
-    color: var(--text);
-    padding: 4px 0;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-  }
-
-  .q-card ul li:last-child { border-bottom: none; }
-
-  .q-card ul li::before {
-    content: '→';
-    color: var(--accent);
-    flex-shrink: 0;
-    font-size: 11px;
-    margin-top: 1px;
-  }
-
-  /* ── TIMELINE ── */
-  .timeline-scroll {
-    overflow-x: auto;
-    padding-bottom: 8px;
-  }
-
-  .timeline {
-    display: flex;
-    align-items: flex-start;
-    gap: 0;
-    min-width: 760px;
-    padding: 8px 0 24px;
-    position: relative;
-  }
-
-  .tl-step {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-  }
-
-  .tl-connector {
-    position: absolute;
-    top: 14px;
-    left: 50%;
-    right: -50%;
-    height: 2px;
-    background: var(--border);
-    z-index: 0;
-  }
-
-  .tl-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    z-index: 1;
-    position: relative;
-    flex-shrink: 0;
-    border: 2px solid transparent;
-  }
-
-  .tl-dot.manual {
-    background: var(--surface2);
-    border-color: var(--border);
-    color: var(--muted);
-  }
-
-  .tl-dot.ai {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: white;
-  }
-
-  .tl-dot.both {
-    background: #5b2eaf;
-    border-color: #5b2eaf;
-    color: white;
-  }
-
-  .tl-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-align: center;
-    margin-top: 8px;
-    line-height: 1.3;
-    max-width: 80px;
-  }
-
-  .tl-sub {
-    font-size: 9.5px;
-    color: var(--muted);
-    text-align: center;
-    margin-top: 3px;
-    max-width: 80px;
-    line-height: 1.3;
-  }
-
-  .tl-tag {
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 2px 6px;
-    border-radius: 10px;
-    margin-top: 5px;
-  }
-
-  .tl-tag.ai { background: var(--accent-light); color: var(--accent); }
-  .tl-tag.manual { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
-  .tl-tag.both { background: #5b2eaf; color: white; }
-
-  .tl-legend {
-    display: flex;
-    gap: 16px;
-    margin-top: 4px;
-    font-size: 11px;
-  }
-
-  .tl-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--muted);
-  }
-
-  .tl-legend-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-  }
-
-  /* ── PILOT SECTION ── */
-  .pilot-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 16px;
-  }
-
-  .pilot-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-  }
-
-  .pilot-card .pc-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .pilot-card .pc-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-
-  .pilot-card .pc-body {
-    font-size: 11.5px;
-    color: var(--text);
-    line-height: 1.5;
-  }
-
-  .tool-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-  }
-
-  .tool-chip {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 500;
-  }
-
-  .tool-chip.build { background: var(--ink); color: white; }
-  .tool-chip.api { background: var(--accent-light); color: var(--accent); border: 1px solid var(--accent); }
-  .tool-chip.infra { background: var(--green-light); color: var(--green); }
-
-  .demo-link-box {
-    background: linear-gradient(135deg, #1b1464, #3d1f9e);
-    border-radius: 10px;
-    padding: 18px 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-top: 14px;
-  }
-
-  .demo-link-box .dl-text {
-    color: white;
-    font-size: 13px;
-    font-weight: 500;
-  }
-
-  .demo-link-box .dl-sub {
-    color: #a0a8d8;
-    font-size: 11px;
-    margin-top: 2px;
-  }
-
-  .demo-link-box a {
-    background: #6b3fd4;
-    color: white;
-    text-decoration: none;
-    padding: 9px 18px;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  /* ── BUILD VS BUY ── */
-  .bvb-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 14px;
-  }
-
-  .bvb-card {
-    border-radius: 10px;
-    padding: 18px;
-    border: 1.5px solid var(--border);
-  }
-
-  .bvb-card.build { border-color: var(--green); background: var(--green-light); }
-  .bvb-card.buy { border-color: #3a5a8a; background: #d8e4f5; }
-  .bvb-card.neither { border-color: var(--border); background: var(--surface2); }
-
-  .bvb-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
-  .bvb-icon {
-    font-size: 18px;
-  }
-
-  .bvb-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px;
-  }
-
-  .bvb-card.build .bvb-title { color: var(--green); }
-  .bvb-card.buy .bvb-title { color: #3a5a8a; }
-  .bvb-card.neither .bvb-title { color: var(--muted); }
-
-  .bvb-when {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-
-  .bvb-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  .bvb-list li {
-    font-size: 11.5px;
-    padding: 4px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    display: flex;
-    gap: 7px;
-    align-items: flex-start;
-  }
-
+  /* BUILD VS BUY */
+  .bvb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+  .bvb-card { border-radius: 10px; padding: 16px 18px; border: 1.5px solid #d8daf0; background: #f0f2fb; }
+  .bvb-card.build { }
+  .bvb-card.buy { }
+  .bvb-card.neither { }
+  .bvb-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .bvb-icon { font-size: 16px; }
+  .bvb-title { font-family: 'Playfair Display', serif; font-size: 15px; color: #1b1464; }
+  .bvb-card.build .bvb-title { color: #1b1464; }
+  .bvb-card.buy .bvb-title { color: #1b1464; }
+  .bvb-card.neither .bvb-title { color: #1b1464; }
+  .bvb-when { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #8890c0; margin-bottom: 8px; }
+  .bvb-list { list-style: none; }
+  .bvb-list li { font-size: 11.5px; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; gap: 6px; align-items: flex-start; line-height: 1.4; }
   .bvb-list li:last-child { border-bottom: none; }
+  .bvb-list li::before { content: '✓'; font-size: 10px; flex-shrink: 0; margin-top: 2px; font-weight: 700; }
+  .bvb-card.build .bvb-list li::before { color: #6b3fd4; }
+  .bvb-card.buy .bvb-list li::before { color: #6b3fd4; }
+  .bvb-card.neither .bvb-list li::before { color: #6b3fd4; }
 
-  .bvb-list li::before {
-    content: '✓';
-    font-size: 10px;
-    flex-shrink: 0;
-    margin-top: 2px;
-    font-weight: 700;
-  }
+  /* VENDOR NOTE */
+  .vendor-note { background: #f0f2fb; border: 1px solid #d8daf0; border-left: 3px solid #6b3fd4; border-radius: 0 8px 8px 0; padding: 14px 18px; font-size: 12.5px; color: #3a3a7a; line-height: 1.6; }
+  .vendor-note strong { color: #1b1464; }
 
-  .bvb-card.build .bvb-list li::before { color: var(--green); }
-  .bvb-card.buy .bvb-list li::before { color: #3a5a8a; }
-  .bvb-card.neither .bvb-list li::before { color: var(--muted); }
+  /* BOTTOM */
+  .bottom-row { margin-top: 32px; }
+  .demo-box { background: #f0f2fb; border: 1.5px solid #d8daf0; border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; gap: 24px; }
+  .demo-box-text { flex: 1; }
+  .demo-box-title { font-size: 13px; font-weight: 700; color: #1b1464; margin-bottom: 4px; }
+  .demo-box-sub { font-size: 12px; color: #6b6fa8; line-height: 1.5; }
+  .demo-box a { display: inline-block; background: #6b3fd4; color: white; text-decoration: none; padding: 10px 22px; border-radius: 50px; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
 
-  .decision-matrix {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px;
-    margin-top: 14px;
-  }
+  /* FOOTER */
+  .footer { background: #f0f2fb; border-top: 1px solid #d8daf0; padding: 14px 48px; display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: #a0a8d8; font-family: 'DM Mono', monospace; }
 
-  .dm-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .dm-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11.5px;
-  }
-
-  .dm-table th {
-    text-align: left;
-    padding: 6px 10px;
-    background: var(--ink);
-    color: white;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .dm-table th:first-child { border-radius: 6px 0 0 0; }
-  .dm-table th:last-child { border-radius: 0 6px 0 0; }
-
-  .dm-table td {
-    padding: 7px 10px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-
-  .dm-table tr:last-child td { border-bottom: none; }
-  .dm-table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
-
-  .verdict {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
-  }
-
-  .verdict.build { background: var(--green-light); color: var(--green); }
-  .verdict.buy { background: #d8e4f5; color: #3a5a8a; }
-  .verdict.neither { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
-
-  /* ── FOOTER ── */
-  .footer {
-    background: #1b1464;
-    color: #a0a8d8;
-    padding: 20px 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 11px;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .footer a { color: #a78ede; text-decoration: none; }
-
-  @media print {
-    body { background: white; }
-    .page { box-shadow: none; }
-  }
-
-  @media (max-width: 700px) {
-    .header, .body { padding-left: 20px; padding-right: 20px; }
-    .q-grid, .pilot-grid, .bvb-grid { grid-template-columns: 1fr; }
-    .header-top { flex-direction: column; gap: 12px; }
-    .header-meta { text-align: left; }
-    .footer { flex-direction: column; gap: 8px; text-align: center; }
+  @media (max-width: 680px) {
+    .header, .body { padding: 24px 20px; }
+    .stats-row, .pilot-row, .bvb-grid, .bottom-row { grid-template-columns: 1fr; }
+    .header-meta { display: none; }
+    .header-headline { font-size: 24px; }
+    .footer { flex-direction: column; gap: 6px; text-align: center; }
   }
 </style>
 </head>
@@ -602,397 +169,317 @@
 
   <!-- HEADER -->
   <div class="header">
-    <div class="header-top">
-      <div>
-        <div class="logo">Elektra Health</div>
-        <div class="headline">Can <em>AI</em> transform your<br>billing & claims workflow?</div>
-        <div class="header-sub">A structured pilot to find out — without committing to an expensive solution before you know it works.</div>
-      </div>
-      <div class="header-meta">
-        Prepared for: Elektra Health<br>
-        Prepared by: AI Consulting Pilot<br>
-        Date: February 2025<br>
-        Est. Pilot Timeline: 6–8 weeks
-      </div>
+    <div class="header-eyebrow">
+      <div class="e-logo">E</div>
+      <div class="header-eyebrow-text">Elektra Health · AI Billing Discovery</div>
+    </div>
+    <div class="header-headline">Could AI meaningfully reduce<br>your billing & claims burden?</div>
+    <div class="header-sub">A proposed 6-week discovery to find out — measuring what the work actually costs today, testing two targeted AI workflows, and arriving at a clear, data-backed answer on whether it's worth pursuing further.</div>
+    <div class="header-meta">
+      Prepared for: Elektra Health<br>
+      Prepared by: Divya Patel<br>
+      February 2025
     </div>
   </div>
 
   <div class="body">
 
-    <!-- SECTION 1: DISCOVERY QUESTIONS -->
-    <div class="section">
-      <div class="section-header">
-        <span class="section-num">01</span>
-        <span class="section-title">Discovery Questions — What We Need to Learn First</span>
+    <!-- CONTEXT -->
+    <div class="section-label">Context</div>
+    <div class="section-heading">Why billing & claims is worth a closer look</div>
+    <div class="section-sub">These are industry benchmarks — the first goal of the discovery would be to measure Elektra's actual numbers and establish a real baseline. Women's health practices tend to run on the harder end of these ranges given payer complexity around menopause care and HRT.</div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">5–10%</div>
+        <div class="stat-label">Industry avg denial rate</div>
+        <div class="stat-note">Women's health often higher — payers routinely push back on HRT, testosterone therapy, and menopause-specific coding</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-num">2–3 hrs</div>
+        <div class="stat-label">Per denial, managed manually</div>
+        <div class="stat-note">Review, research, draft appeal, resubmit, track. Skilled time — and it compounds quickly at scale</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">~18 hrs</div>
+        <div class="stat-label">Estimated per 10 claims (full cycle)</div>
+        <div class="stat-note">Industry estimate across the whole lifecycle — the discovery would establish what it actually is for Elektra</div>
+      </div>
+    </div>
 
-      <div class="q-grid">
-        <div class="q-card">
-          <div class="q-category">🛠 Tech Stack</div>
-          <ul>
-            <li>What practice management / EHR system do you use today? (e.g. Athenahealth, Jane App, Kareo)</li>
-            <li>How do claims get submitted — directly through the EHR, a clearinghouse, or manually?</li>
-            <li>Do any of your current tools have AI features built in? Are they turned on?</li>
-            <li>Does your EHR or billing platform expose an API for data access?</li>
-            <li>Where does payment posting and reconciliation happen today?</li>
-          </ul>
+    <div class="divider"></div>
+
+    <!-- DISCOVERY QUESTIONS -->
+    <div class="section-label">Discovery Questions</div>
+    <div class="section-heading">What we'd need to understand before building anything</div>
+    <div class="section-sub">The first two weeks are purely about understanding the current state — no AI, no building, just learning. These are the questions that would shape everything that follows. Click each category to expand.</div>
+
+    <div class="expand-group">
+      <button class="expand-trigger" onclick="toggleExpand(this)">
+        <div class="expand-left"><span class="expand-emoji">🛠</span><span class="expand-title">Tech Stack & Tools</span></div>
+        <span class="expand-hint">5 questions</span>
+        <span class="expand-chevron">▼</span>
+      </button>
+      <div class="expand-body">
+        <ul class="q-list">
+          <li>What practice management or EHR system do you use today — Athenahealth, Jane App, Kareo, or something else?</li>
+          <li>How do claims get submitted — directly through the EHR, via a clearinghouse, or a more manual process?</li>
+          <li>Do any of your current tools have AI features built in? Are any of them actively used?</li>
+          <li>Does your EHR or billing platform expose an API for data access?</li>
+          <li>Where does payment posting and reconciliation happen — in the EHR, a spreadsheet, or elsewhere?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="expand-group">
+      <button class="expand-trigger" onclick="toggleExpand(this)">
+        <div class="expand-left"><span class="expand-emoji">⏱</span><span class="expand-title">Current Manual Workflow</span></div>
+        <span class="expand-hint">5 questions</span>
+        <span class="expand-chevron">▼</span>
+      </button>
+      <div class="expand-body">
+        <ul class="q-list">
+          <li>Walk me through what happens step-by-step after a patient visit ends — who does what, in what order?</li>
+          <li>Who owns billing today — is it a dedicated role or split across people?</li>
+          <li>How many claims do you process per week or month?</li>
+          <li>How do you track claim status and follow up on aging or unpaid claims?</li>
+          <li>What does denial management look like in practice — who handles it, what's the process, how long does each one take?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="expand-group">
+      <button class="expand-trigger" onclick="toggleExpand(this)">
+        <div class="expand-left"><span class="expand-emoji">🔥</span><span class="expand-title">Pain Points & Priorities</span></div>
+        <span class="expand-hint">5 questions</span>
+        <span class="expand-chevron">▼</span>
+      </button>
+      <div class="expand-body">
+        <ul class="q-list">
+          <li>Which step in the billing process takes the longest or feels most error-prone?</li>
+          <li>What's your current denial rate, and what are the top 3 denial reasons?</li>
+          <li>How often do you write off denied claims rather than appealing — and what drives that decision?</li>
+          <li>Are there specific payers that cause disproportionate headaches?</li>
+          <li>If your billing team got an hour back per day, what would they actually do with it?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="expand-group">
+      <button class="expand-trigger" onclick="toggleExpand(this)">
+        <div class="expand-left"><span class="expand-emoji">📊</span><span class="expand-title">Data & Scale</span></div>
+        <span class="expand-hint">5 questions</span>
+        <span class="expand-chevron">▼</span>
+      </button>
+      <div class="expand-body">
+        <ul class="q-list">
+          <li>How much historical claims data do you have access to, and in what format — EHR export, spreadsheet, something else?</li>
+          <li>Do you currently track time spent per claim or per denial anywhere?</li>
+          <li>What's your average days-to-payment across your major payers?</li>
+          <li>How is the team expected to grow over the next 12 months — and does billing volume scale with it?</li>
+          <li>What does a fully-loaded cost per claim look like today — staff time, write-offs, rework?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- LIFECYCLE -->
+    <div class="section-label">Billing & Claims Lifecycle</div>
+    <div class="section-heading">Where AI and automation can help across the cycle</div>
+    <div class="section-sub">7 of 10 steps in the billing cycle have a meaningful AI or automation opportunity. The highest-ROI starting points for a discovery are medical coding (step 3) and denial management (step 9) — both high-volume, time-intensive, and well-suited to AI assistance.</div>
+
+    <div class="tl-legend">
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#6b3fd4"></div>AI opportunity</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#1b1464"></div>Automation + AI</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#d8daf0;border:1px solid #c0c2d8;"></div>Human / payer</div>
+    </div>
+
+    <div class="timeline-scroll">
+      <div class="timeline">
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot both">1</div>
+          <div class="tl-label">Patient Scheduling</div>
+          <div class="tl-sub">Eligibility & insurance verification</div>
+          <span class="tl-tag both">Auto + AI</span>
         </div>
-
-        <div class="q-card">
-          <div class="q-category">⏱ Manual Workflow</div>
-          <ul>
-            <li>Walk me through what happens step-by-step after a patient visit ends</li>
-            <li>Who on the team owns billing — is it a dedicated person or shared?</li>
-            <li>How many claims do you process per week / month?</li>
-            <li>How do you currently track claim status and follow up on unpaid claims?</li>
-            <li>What does denial management look like today — who handles it, how long does it take?</li>
-          </ul>
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot manual">2</div>
+          <div class="tl-label">Clinical Visit</div>
+          <div class="tl-sub">Provider documents SOAP note</div>
+          <span class="tl-tag manual">Human</span>
         </div>
-
-        <div class="q-card">
-          <div class="q-category">🔥 Pain Points</div>
-          <ul>
-            <li>Which step in the process takes the longest or is most error-prone?</li>
-            <li>What's your current denial rate, and what are your top 3 denial reasons?</li>
-            <li>How often do you write off denied claims instead of appealing?</li>
-            <li>Are there specific payers that cause disproportionate pain?</li>
-            <li>What would "one hour back per day" mean to your team?</li>
-          </ul>
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot ai">3</div>
+          <div class="tl-label">Medical Coding</div>
+          <div class="tl-sub">ICD-10 + CPT from clinical notes</div>
+          <span class="tl-tag ai">AI ✦ High ROI</span>
         </div>
-
-        <div class="q-card">
-          <div class="q-category">📊 Data & Scale</div>
-          <ul>
-            <li>How much historical claims data do you have access to — and in what format?</li>
-            <li>Do you track time spent per claim or denial today?</li>
-            <li>What's your average days-to-payment across payers?</li>
-            <li>How is the team expected to grow over the next 12 months — and does billing scale with it?</li>
-            <li>What's your current cost per claim processed (staff time × hourly rate)?</li>
-          </ul>
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot ai">4</div>
+          <div class="tl-label">Claim Scrubbing</div>
+          <div class="tl-sub">Pre-submission error & denial risk</div>
+          <span class="tl-tag ai">AI ✦</span>
+        </div>
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot both">5</div>
+          <div class="tl-label">Claim Submission</div>
+          <div class="tl-sub">EDI 837 to clearinghouse</div>
+          <span class="tl-tag both">Auto + AI</span>
+        </div>
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot manual">6</div>
+          <div class="tl-label">Payer Adjudication</div>
+          <div class="tl-sub">Payer reviews & approves or denies</div>
+          <span class="tl-tag manual">Payer Side</span>
+        </div>
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot ai">7</div>
+          <div class="tl-label">EOB Parsing</div>
+          <div class="tl-sub">Read & categorize explanation of benefits</div>
+          <span class="tl-tag ai">AI ✦</span>
+        </div>
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot both">8</div>
+          <div class="tl-label">Payment Posting</div>
+          <div class="tl-sub">Match payments to claims</div>
+          <span class="tl-tag both">Auto + AI</span>
+        </div>
+        <div class="tl-step">
+          <div class="tl-connector"></div>
+          <div class="tl-dot ai">9</div>
+          <div class="tl-label">Denial Management</div>
+          <div class="tl-sub">Pattern, draft appeal, resubmit</div>
+          <span class="tl-tag ai">AI ✦ High ROI</span>
+        </div>
+        <div class="tl-step">
+          <div class="tl-connector" style="background:transparent"></div>
+          <div class="tl-dot both">10</div>
+          <div class="tl-label">Reporting & AR</div>
+          <div class="tl-sub">Aging reports, collection analytics</div>
+          <span class="tl-tag both">Auto + AI</span>
         </div>
       </div>
     </div>
 
-    <!-- SECTION 2: TIMELINE -->
-    <div class="section">
-      <div class="section-header">
-        <span class="section-num">02</span>
-        <span class="section-title">Billing & Claims Lifecycle — Where AI Can Help</span>
-      </div>
+    <div class="divider"></div>
 
-      <div class="tl-legend" style="margin-bottom:14px;">
-        <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--accent)"></div> AI opportunity</div>
-        <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--ink)"></div> Automation + AI</div>
-        <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--border)"></div> Manual / human</div>
-      </div>
+    <!-- PILOT -->
+    <div class="section-label">Proposed Discovery Structure</div>
+    <div class="section-heading">6 weeks, minimal lift from your team</div>
+    <div class="section-sub">The goal isn't to build a product — it's to answer a specific question: is there enough here to justify going further? The pilot is designed to produce a clear, honest answer either way.</div>
 
-      <div class="timeline-scroll">
-        <div class="timeline">
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot both">1</div>
-            <div class="tl-label">Patient Scheduling</div>
-            <div class="tl-sub">Insurance verification, eligibility check</div>
-            <span class="tl-tag both">Auto + AI</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot manual">2</div>
-            <div class="tl-label">Clinical Visit</div>
-            <div class="tl-sub">Provider documents SOAP note in EHR</div>
-            <span class="tl-tag manual">Human</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot ai">3</div>
-            <div class="tl-label">Medical Coding</div>
-            <div class="tl-sub">ICD-10 + CPT code selection from notes</div>
-            <span class="tl-tag ai">AI ✦</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot ai">4</div>
-            <div class="tl-label">Claim Scrubbing</div>
-            <div class="tl-sub">Pre-submission error & denial risk check</div>
-            <span class="tl-tag ai">AI ✦</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot both">5</div>
-            <div class="tl-label">Claim Submission</div>
-            <div class="tl-sub">EDI 837 to clearinghouse / payer</div>
-            <span class="tl-tag both">Auto + AI</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot manual">6</div>
-            <div class="tl-label">Payer Adjudication</div>
-            <div class="tl-sub">Payer reviews, approves or denies</div>
-            <span class="tl-tag manual">Payer Side</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot ai">7</div>
-            <div class="tl-label">EOB Parsing</div>
-            <div class="tl-sub">Read & categorize explanation of benefits</div>
-            <span class="tl-tag ai">AI ✦</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot both">8</div>
-            <div class="tl-label">Payment Posting</div>
-            <div class="tl-sub">Match payments to claims, post to accounts</div>
-            <span class="tl-tag both">Auto + AI</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector"></div>
-            <div class="tl-dot ai">9</div>
-            <div class="tl-label">Denial Management</div>
-            <div class="tl-sub">Identify pattern, draft appeal, resubmit</div>
-            <span class="tl-tag ai">AI ✦ High ROI</span>
-          </div>
-
-          <div class="tl-step">
-            <div class="tl-connector" style="display:none"></div>
-            <div class="tl-dot both">10</div>
-            <div class="tl-label">Reporting & AR</div>
-            <div class="tl-sub">Aging reports, collection rate, payer analytics</div>
-            <span class="tl-tag both">Auto + AI</span>
-          </div>
-
+    <div class="pilot-row">
+      <div class="pilot-step">
+        <div class="step-num">Weeks 1–2</div>
+        <div class="step-title">Establish the baseline</div>
+        <div class="step-body">Log staff time by task, pull historical claims data, identify top denial reasons and days-to-payment. No AI yet — just understanding the current state well enough to measure against it.</div>
+        <div class="step-tools">
+          <span class="chip light">EHR export</span>
+          <span class="chip light">Spreadsheet</span>
         </div>
       </div>
-
-      <div style="background:var(--accent-light);border:1px solid var(--accent);border-radius:8px;padding:12px 16px;font-size:12px;margin-top:4px;">
-        <strong style="color:var(--accent)">Key insight:</strong> 7 of 10 steps in the billing lifecycle have a meaningful AI opportunity. Steps 3 (coding) and 9 (denial management) are the highest-ROI starting points — they consume the most staff time and have the clearest AI fit.
+      <div class="pilot-step">
+        <div class="step-num">Weeks 3–4</div>
+        <div class="step-title">Build two lightweight workflows</div>
+        <div class="step-body">Clinical note → code suggestions. Denial reason → appeal draft. Staff reviews all AI output before anything is submitted. Built model-agnostic — not locked to any single AI vendor.</div>
+        <div class="step-tools">
+          <span class="chip dark">Claude API</span>
+          <span class="chip dark">Claude Code</span>
+          <span class="chip light">Cursor</span>
+        </div>
+      </div>
+      <div class="pilot-step">
+        <div class="step-num">Weeks 5–6</div>
+        <div class="step-title">Run it, measure it, decide</div>
+        <div class="step-body">AI-assisted alongside the current process. Measure time per task, coding accuracy, appeal win rate. Ends with a concrete recommendation: build, buy a vendor, or stop here.</div>
+        <div class="step-tools">
+          <span class="chip light">Review dashboard</span>
+          <span class="chip light">Time log</span>
+        </div>
       </div>
     </div>
 
-    <!-- SECTION 3: PILOT -->
-    <div class="section">
-      <div class="section-header">
-        <span class="section-num">03</span>
-        <span class="section-title">Proposed Pilot — 6-Week Build & Evaluate</span>
+    <div class="divider"></div>
+
+    <!-- BUILD VS BUY -->
+    <div class="section-label">How the discovery ends</div>
+    <div class="section-heading">Build vs. buy vs. neither</div>
+    <div class="section-sub">The discovery closes with a recommendation across one of these three paths. The right answer depends entirely on what the data shows — there's no predetermined outcome.</div>
+
+    <div class="bvb-grid">
+      <div class="bvb-card build">
+        <div class="bvb-header"><div class="bvb-icon">🔨</div><div class="bvb-title">Build</div></div>
+        <div class="bvb-when">Makes sense when</div>
+        <ul class="bvb-list">
+          <li>Pilot shows clear time savings (2+ hrs/week recovered)</li>
+          <li>No vendor fits Elektra's payer mix or women's health specifics</li>
+          <li>Volume is growing — ROI compounds over time</li>
+          <li>You want control over the AI logic and prompt behavior</li>
+        </ul>
       </div>
-
-      <div class="pilot-grid">
-
-        <div class="pilot-card">
-          <div class="pc-num">Wk 1–2</div>
-          <div class="pc-label">Baseline Measurement</div>
-          <div class="pc-body">
-            Log staff time by task category. Pull 6–12 months of claims data. Identify top denial reasons, average days-to-payment, and total staff hours per claim. Establish the baseline we're measuring against.
-            <div class="tool-stack">
-              <span class="tool-chip infra">Airtable / Notion</span>
-              <span class="tool-chip infra">Google Sheets</span>
-              <span class="tool-chip infra">EHR Export</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="pilot-card">
-          <div class="pc-num">Wk 3–4</div>
-          <div class="pc-label">AI Pipeline Build</div>
-          <div class="pc-body">
-            Build two lightweight AI workflows: (1) clinical note → ICD-10 + CPT code suggestions with human approval, (2) denial reason + note → appeal letter draft. Human reviews all AI outputs before any action is taken.
-            <div style="background:rgba(193,123,63,0.1);border:1px solid rgba(193,123,63,0.3);border-radius:6px;padding:9px 10px;margin-top:10px;font-size:11px;line-height:1.5;">
-              <span style="font-weight:700;color:var(--accent);">Why Claude/Cursor over Gemini CLI?</span><br>
-              Elektra likely has Gemini via GSuite — but Gemini CLI's coding agent lags meaningfully behind Claude Code and Cursor today in code quality, context handling, and agentic reliability. For a time-boxed pilot where output quality matters, Claude Code + Cursor is the stronger choice. That said, the pipeline should be built <strong>model-agnostic</strong> — swap the model string in one config file and the whole system works with Gemini, GPT-4, or whatever outperforms in 6 months. We're not betting on a model; we're betting on the workflow.
-            </div>
-            <div class="tool-stack">
-              <span class="tool-chip api">Claude API</span>
-              <span class="tool-chip build">Claude Code</span>
-              <span class="tool-chip build">Cursor</span>
-              <span class="tool-chip infra">Postgres</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="pilot-card">
-          <div class="pc-num">Wk 5–6</div>
-          <div class="pc-label">Run & Measure</div>
-          <div class="pc-body">
-            Run the AI pipeline on live claims alongside the existing manual process. Track: time per claim (AI-assisted vs. manual), coding accuracy, appeal acceptance rate, and staff satisfaction. Make the build/buy/neither decision with data.
-            <div class="tool-stack">
-              <span class="tool-chip build">Claude Code</span>
-              <span class="tool-chip infra">Dashboard UI</span>
-              <span class="tool-chip infra">Time tracking</span>
-            </div>
-          </div>
-        </div>
-
+      <div class="bvb-card buy">
+        <div class="bvb-header"><div class="bvb-icon">🛒</div><div class="bvb-title">Buy</div></div>
+        <div class="bvb-when">Makes sense when</div>
+        <ul class="bvb-list">
+          <li>ROI is clear and a vendor exists at the right price point</li>
+          <li>EHR integration would be costly or complex to build internally</li>
+          <li>Compliance requirements favor a certified, audited vendor</li>
+          <li>Engineering capacity is limited or expensive</li>
+        </ul>
       </div>
-
-      <!-- Approx build -->
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-top:14px;">
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:10px;">Approximate Build — What Gets Created in the Pilot</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:12px;">
-          <div>
-            <div style="font-weight:600;margin-bottom:6px;color:var(--text)">Two AI Prompt Pipelines</div>
-            A script that takes a clinical note as input, sends it to the Claude API with a structured prompt, and returns suggested ICD-10 + CPT codes with rationale. A second script takes a denial reason code + clinical note and returns a draft appeal letter in Elektra's voice and format.
-          </div>
-          <div>
-            <div style="font-weight:600;margin-bottom:6px;color:var(--text)">A Simple Review UI</div>
-            A lightweight web interface (like the sample dashboard below) where the billing team can see AI-generated suggestions, edit them, approve or reject, and track status. No EHR integration required in the pilot — manual data entry to test the concept. Built with Claude Code in ~1 week.
-          </div>
-          <div>
-            <div style="font-weight:600;margin-bottom:6px;color:var(--text)">Built Model-Agnostic from Day One</div>
-            The pipeline is architected so the AI model is a swappable config value — not hardcoded. If Gemini 3 or GPT-5 outperforms Claude on billing tasks in 6 months, we point the config at the new model and the whole system follows. We're building a durable workflow, not a dependency on any single vendor's roadmap.
-          </div>
-        </div>
+      <div class="bvb-card neither">
+        <div class="bvb-header"><div class="bvb-icon">⏸</div><div class="bvb-title">Neither (yet)</div></div>
+        <div class="bvb-when">Makes sense when</div>
+        <ul class="bvb-list">
+          <li>Volume is too low to justify the investment right now</li>
+          <li>Current manual process is fast and accurate enough</li>
+          <li>Implementation overhead exceeds expected year-one savings</li>
+          <li>Data quality is too poor to produce reliable AI outputs</li>
+        </ul>
       </div>
+    </div>
 
-      <!-- Demo link -->
-      <div class="demo-link-box">
-        <div>
-          <div class="dl-text">📊 See what the billing team would interact with</div>
-          <div class="dl-sub">Live sample dashboard — 10 realistic Elektra patients with claim details, denial reasons, and AI-drafted appeals</div>
+    <div class="vendor-note">
+      <strong>A note on vendors:</strong> Most healthcare billing AI vendors are wrapping the same general-purpose models (Claude, GPT-4) in a branded UI and charging $30–100k/year for it. Running the discovery first means Elektra understands the ROI before committing to anything — and if a vendor turns out to be the right call, it's from a position of knowing exactly what to look for and what's worth paying for.
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="bottom-row">
+      <div class="demo-box">
+        <div class="demo-box-text">
+          <div class="demo-box-title">📊 Working prototype</div>
+          <div class="demo-box-sub">10 patient claims with coding details, denial reasons, AI-drafted appeal letters, and time estimates — built to illustrate what the billing team would actually interact with.</div>
         </div>
         <a href="elektra_billing_dashboard.html" target="_blank">View Sample Dashboard →</a>
       </div>
-
     </div>
 
-    <!-- SECTION 4: BUILD VS BUY -->
-    <div class="section">
-      <div class="section-header">
-        <span class="section-num">04</span>
-        <span class="section-title">Build vs. Buy vs. Neither — Decision Framework</span>
-      </div>
-
-      <!-- Vendor wrapper insight -->
-      <div style="background:linear-gradient(135deg,#1b1464,#3d1f9e);border-radius:10px;padding:20px 24px;margin-bottom:18px;position:relative;overflow:hidden;">
-        <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;border:24px solid rgba(107,63,212,0.2);"></div>
-        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:#a78ede;margin-bottom:8px;">⚠ The Vendor Trap</div>
-        <div style="font-family:'Playfair Display',serif;font-size:17px;color:white;line-height:1.35;margin-bottom:10px;">
-          Don't pay $50k/year for a vendor wrapper to answer a question a 6-week pilot can answer for a few thousand dollars in engineering time.
-        </div>
-        <div style="font-size:12px;color:#a0a8d8;line-height:1.6;max-width:680px;">
-          Most healthcare billing AI vendors are not building proprietary models — they're wrapping the same general-purpose APIs (Claude, GPT-4) in a healthcare-branded UI, adding billing-specific prompts, and charging enterprise prices for it. The core intelligence is not theirs. The pilot is specifically designed to validate ROI <em style="color:#c8b8f0">before</em> you're locked into a contract, so that if you do eventually buy, you know exactly what you're paying for and have the leverage to negotiate it.
-        </div>
-      </div>
-
-      <div class="bvb-grid">
-
-        <div class="bvb-card build">
-          <div class="bvb-header">
-            <div class="bvb-icon">🔨</div>
-            <div class="bvb-title">Build</div>
-          </div>
-          <div class="bvb-when">Choose Build When:</div>
-          <ul class="bvb-list">
-            <li>Pilot proves clear time savings (2+ hrs/week recovered)</li>
-            <li>No vendor fits Elektra's specific payer mix or women's health workflows</li>
-            <li>You want full control over the prompt logic and AI behavior</li>
-            <li>Volume is growing and the ROI compounds over time</li>
-            <li>You have engineering capacity (even part-time)</li>
-          </ul>
-        </div>
-
-        <div class="bvb-card buy">
-          <div class="bvb-header">
-            <div class="bvb-icon">🛒</div>
-            <div class="bvb-title">Buy</div>
-          </div>
-          <div class="bvb-when">Choose Buy When:</div>
-          <ul class="bvb-list">
-            <li>Pilot confirms ROI and a vendor solution exists at the right price</li>
-            <li>Engineering capacity is constrained or costly</li>
-            <li>Vendor offers EHR integration that would be expensive to build</li>
-            <li>Compliance and audit requirements make a certified vendor preferable</li>
-            <li>The problem is table stakes, not a competitive differentiator</li>
-          </ul>
-        </div>
-
-        <div class="bvb-card neither">
-          <div class="bvb-header">
-            <div class="bvb-icon">⏸</div>
-            <div class="bvb-title">Neither (Yet)</div>
-          </div>
-          <div class="bvb-when">Pause When:</div>
-          <ul class="bvb-list">
-            <li>Pilot shows current volume is too low to justify investment</li>
-            <li>Manual process is already fast and accurate enough</li>
-            <li>Implementation overhead exceeds expected savings in year 1</li>
-            <li>Team doesn't have bandwidth to manage an AI tool or vendor</li>
-            <li>Data quality is too poor to produce reliable AI outputs</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <!-- Decision matrix -->
-      <div class="decision-matrix">
-        <div class="dm-title">Quick Decision Matrix — Scoring Guide from Pilot Data</div>
-        <table class="dm-table">
-          <thead>
-            <tr>
-              <th>Signal from Pilot</th>
-              <th>Threshold</th>
-              <th>Build</th>
-              <th>Buy</th>
-              <th>Neither</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Time saved per claim (AI vs. manual)</td>
-              <td>&gt;50% reduction in handling time</td>
-              <td><span class="verdict build">Build</span></td>
-              <td><span class="verdict buy">Buy</span></td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>Monthly claims volume</td>
-              <td>&lt;100/mo = low ROI; &gt;300/mo = strong ROI</td>
-              <td>—</td>
-              <td><span class="verdict buy">Buy</span></td>
-              <td><span class="verdict neither">Neither</span></td>
-            </tr>
-            <tr>
-              <td>Appeal success rate improvement</td>
-              <td>&gt;15% lift in accepted appeals</td>
-              <td><span class="verdict build">Build</span></td>
-              <td><span class="verdict buy">Buy</span></td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>Est. annual staff time recovered</td>
-              <td>&lt;100 hrs/yr = weak; &gt;300 hrs/yr = strong</td>
-              <td><span class="verdict build">Build</span></td>
-              <td><span class="verdict buy">Buy</span></td>
-              <td><span class="verdict neither">Neither</span></td>
-            </tr>
-            <tr>
-              <td>Pilot build cost vs. annual savings</td>
-              <td>Payback period &lt;6 months = go; &gt;18 months = pause</td>
-              <td><span class="verdict build">Build</span></td>
-              <td>—</td>
-              <td><span class="verdict neither">Neither</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-
-  </div><!-- /body -->
-
-  <!-- FOOTER -->
-  <div class="footer">
-    <div>Elektra Health · AI Billing & Claims Pilot · Confidential</div>
-    <div>Questions? This pitch was built to start a conversation — not end one.</div>
   </div>
 
-</div><!-- /page -->
+  <div class="footer">
+    <div>Elektra Health · AI Billing Discovery · Confidential · February 2025</div>
+    <div>divyaspatel.github.io/elektra-billing-pilot</div>
+  </div>
+
+</div>
+
+<script>
+  function toggleExpand(trigger) {
+    const body = trigger.nextElementSibling;
+    const isOpen = trigger.classList.contains('open');
+    document.querySelectorAll('.expand-trigger').forEach(t => t.classList.remove('open'));
+    document.querySelectorAll('.expand-body').forEach(b => b.classList.remove('open'));
+    if (!isOpen) { trigger.classList.add('open'); body.classList.add('open'); }
+  }
+</script>
 </body>
 </html>
